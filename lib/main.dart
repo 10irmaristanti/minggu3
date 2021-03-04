@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'widget/Convert.dart';
 import 'widget/Input.dart';
 import 'widget/Result.dart';
-
+import 'widget/Riwayat.dart';
 void main() {
   runApp(MyApp());
 }
@@ -16,21 +16,24 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   double _inputUser = 0;
-
   double _kelvin = 0;
+  double _reamur = 0;
+  final inputController = TextEditingController();
+  String _newValue = "Kelvin";
+  double _result = 0;
+  List<String> listViewItem = List<String>();
+  void perhitunganSuhu() {
+        setState(() {
+        _inputUser = double.parse(inputController.text);
+        if (_newValue == "Kelvin")
+        _result = _inputUser + 273;
+        else
+        _result = (4 / 5) * _inputUser;
+ });
+        listViewItem.add("$_newValue : $_result");
+ }
 
-  double _reamur =0;
-
-  TextEditingController inputUserController = TextEditingController();
-
-  void _konversi() {
-    setState(() {
-      _inputUser = double.parse(inputUserController.text);
-      _kelvin = _inputUser + 273;
-      _reamur = (4/5) * _inputUser ;
-    }
-    );
-  }
+  var listItem = ["Kelvin", "Reamur"];
 
   @override
   Widget build(BuildContext context) {
@@ -49,17 +52,41 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Input(inputUserController: inputUserController),
-              Result(kelvin: _kelvin, reamur: _reamur),
-              Convert(konvertHandler: _konversi,),
-            ],
+              Input(inputUserController: inputController),
+              DropdownButton<String>(
+                items: listItem.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                value: _newValue,
+                onChanged: (String changeValue) {
+                        setState(() {
+                        _newValue = changeValue;
+                        perhitunganSuhu();
+                        });
+                        },
+              ),
+              Result(result: _result),
+              Convert(
+                
+                konvertHandler: perhitunganSuhu,
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 10, bottom: 10),
+                child: Text(
+                "Riwayat Konversi",
+                style: TextStyle(fontSize: 20),
+                ),
+                ),
+                Expanded(
+                child: Riwayat(listViewItem: listViewItem),
+                ),
+                ],
+                ),
+                ),
           ),
-        ),
-      ),
     );
   }
 }
-
-
-
-
