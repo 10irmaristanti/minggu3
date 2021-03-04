@@ -1,6 +1,6 @@
 ![.Plot](./hasil/hasil1.jpeg)
 ![.Plot](./hasil/hasil2.jpeg)
-
+![.Plot](./hasil/hasil3.jpeg)
 # minggu3
 
 A new Flutter project.
