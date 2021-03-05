@@ -4,6 +4,8 @@ import 'widget/Convert.dart';
 import 'widget/Input.dart';
 import 'widget/Result.dart';
 import 'widget/Riwayat.dart';
+import 'widget/DropdownKonversi.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -17,23 +19,30 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   double _inputUser = 0;
   double _kelvin = 0;
-  double _reamur = 0;
-  final inputController = TextEditingController();
-  String _newValue = "Kelvin";
+  double _reamur = 0; //inisialisasi
+  final inputController = TextEditingController(); // memanggil nilai variabel
+  String _newValue = "Kelvin"; //inisialisasi
   double _result = 0;
   List<String> listViewItem = List<String>();
   void perhitunganSuhu() {
-        setState(() {
-        _inputUser = double.parse(inputController.text);
-        if (_newValue == "Kelvin")
+    setState(() {
+      _inputUser = double.parse(inputController.text);
+      if (_newValue == "Kelvin")
         _result = _inputUser + 273;
-        else
+      else
         _result = (4 / 5) * _inputUser;
- });
-        listViewItem.add("$_newValue : $_result");
- }
+    });
+    listViewItem.add("$_newValue : $_result"); //menampilkan hasil
+  }
 
-  var listItem = ["Kelvin", "Reamur"];
+  void dropdownOnChanged(String changeValue) {
+    setState(() {
+      _newValue = changeValue;
+      perhitunganSuhu();
+    });
+  }
+
+  var listItem = ["Kelvin", "Reamur"]; //data nilai
 
   @override
   Widget build(BuildContext context) {
@@ -53,40 +62,29 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Input(inputUserController: inputController),
-              DropdownButton<String>(
-                items: listItem.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                value: _newValue,
-                onChanged: (String changeValue) {
-                        setState(() {
-                        _newValue = changeValue;
-                        perhitunganSuhu();
-                        });
-                        },
-              ),
+              dropdownKonversi(
+                  listItem: listItem,
+                  newValue: _newValue,
+                  dropdownOnChanged: dropdownOnChanged),
               Result(result: _result),
               Convert(
-                
                 konvertHandler: perhitunganSuhu,
               ),
               Container(
                 margin: EdgeInsets.only(top: 10, bottom: 10),
                 child: Text(
-                "Riwayat Konversi",
-                style: TextStyle(fontSize: 20),
+                  "Riwayat Konversi",
+                  style: TextStyle(fontSize: 20),
                 ),
-                ),
-                Expanded(
+              ),
+              Expanded(
+                //memenuhi ruang kosong
                 child: Riwayat(listViewItem: listViewItem),
-                ),
-                ],
-                ),
-                ),
+              ),
+            ],
           ),
+        ),
+      ),
     );
   }
 }

@@ -11,7 +11,7 @@ class Riwayat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-        children: listViewItem.map((String value) {
+        children: listViewItem.map((String value) { //iterasi setiap item dari list
       return Container(
           margin: EdgeInsets.all(10),
           child: Text(
